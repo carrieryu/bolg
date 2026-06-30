@@ -8,9 +8,21 @@ export default function LabGuideSvg({ pose, message, onPoseChange }: GuideProps)
     onPoseChange?.(next)
   }
 
+  const mouthD =
+    pose === 'wave'
+      ? 'M54 75 Q60 81 66 75'
+      : pose === 'think'
+        ? 'M55 76 Q60 74 65 76'
+        : 'M54 75 Q60 78 66 75'
+
   return (
-    <div className="lab-guide-svg" onClick={handleClick} role="button" tabIndex={0}
+    <div
+      className="lab-guide-svg"
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter') handleClick() }}
+      onMouseDown={(e) => e.preventDefault()}
       aria-label="小向导，点击查看提示"
     >
       <div className="lab-guide-svg__bubble">
@@ -23,68 +35,74 @@ export default function LabGuideSvg({ pose, message, onPoseChange }: GuideProps)
         className={`lab-guide-svg__figure lab-guide-svg__figure--${pose}`}
         aria-hidden
       >
-        {/* Hair back */}
+        {/* 后发 */}
         <path
-          d="M35 45 Q60 20 85 45 L88 95 Q60 105 32 95 Z"
+          d="M38 50 Q60 36 82 50 L80 90 Q60 96 40 90 Z"
           fill="#2c2c2c"
         />
-        {/* Body / coat */}
+
+        {/* 身体 */}
         <path
-          d="M42 88 L38 175 L82 175 L78 88 Q60 82 42 88"
+          d="M43 90 L39 175 L81 175 L77 90 Q60 84 43 90"
           fill="#ffffff"
           stroke="#e0dcd6"
           strokeWidth="1.2"
         />
-        {/* Coat lapels */}
-        <path d="M60 88 L52 120 L60 130 L68 120 Z" fill="#f8f6f4" />
-        {/* Skirt */}
-        <path d="M38 130 L35 175 L85 175 L82 130 Z" fill="#a8a4ae" />
-        {/* Head */}
-        <ellipse cx="60" cy="62" rx="26" ry="28" fill="#fdd9c7" stroke="#e8cfc0" strokeWidth="0.8" />
-        {/* Hair front */}
-        <path
-          d="M34 55 Q60 30 86 55 L84 72 Q60 68 36 72 Z"
-          fill="#2c2c2c"
-        />
-        <path d="M34 55 Q28 80 32 100 L38 85 Q34 70 36 60 Z" fill="#2c2c2c" />
-        <path d="M86 55 Q92 80 88 100 L82 85 Q86 70 84 60 Z" fill="#2c2c2c" />
-        {/* Blush */}
-        <ellipse cx="44" cy="68" rx="6" ry="3.5" fill="#f5a8b8" opacity="0.55" />
-        <ellipse cx="76" cy="68" rx="6" ry="3.5" fill="#f5a8b8" opacity="0.55" />
-        {/* Eyes — 可爱圆眼 */}
-        <ellipse cx="48" cy="60" rx="4.5" ry="5.5" fill="#2c2c2c" />
-        <ellipse cx="72" cy="60" rx="4.5" ry="5.5" fill="#2c2c2c" />
-        <circle cx="49.5" cy="58" r="1.2" fill="#fff" />
-        <circle cx="73.5" cy="58" r="1.2" fill="#fff" />
-        {/* Mouth */}
-        <path
-          d={pose === 'wave' ? 'M54 74 Q60 80 66 74' : 'M54 74 Q60 77 66 74'}
-          fill="none"
-          stroke="#c97878"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        {/* Arms */}
+        <path d="M60 90 L52 122 L60 132 L68 122 Z" fill="#f8f6f4" />
+        <path d="M39 132 L36 175 L84 175 L81 132 Z" fill="#a8a4ae" />
+
+        {/* 脸部皮肤 */}
+        <ellipse cx="60" cy="63" rx="25" ry="27" fill="#fdd9c7" stroke="#e8cfc0" strokeWidth="0.8" />
+
+        {/* 五官 */}
+        <ellipse cx="47" cy="61" rx="4.5" ry="5.5" fill="#2c2c2c" />
+        <ellipse cx="73" cy="61" rx="4.5" ry="5.5" fill="#2c2c2c" />
+        <circle cx="48.5" cy="59" r="1.2" fill="#fff" />
+        <circle cx="74.5" cy="59" r="1.2" fill="#fff" />
+        <ellipse cx="43" cy="69" rx="5.5" ry="3" fill="#f5a8b8" opacity="0.5" />
+        <ellipse cx="77" cy="69" rx="5.5" ry="3" fill="#f5a8b8" opacity="0.5" />
+        <path d={mouthD} fill="none" stroke="#c97878" strokeWidth="1.5" strokeLinecap="round" />
+
+        {/* 前发：覆盖头顶到刘海（盖住 crown，避免露头皮） */}
+        <g className="lab-guide-svg__hair-front">
+          <path
+            d="M36 40 Q60 29 84 40 L82 55 Q60 51 38 55 Z"
+            fill="#2c2c2c"
+          />
+          <path
+            d="M36 44 Q31 62 34 84 Q39 80 40 46 Z"
+            fill="#2c2c2c"
+          />
+          <path
+            d="M84 44 Q89 62 86 84 Q81 80 80 46 Z"
+            fill="#2c2c2c"
+          />
+        </g>
+
+        {/* 手臂 */}
         <g className="lab-guide-svg__arm lab-guide-svg__arm--left">
-          <path d="M42 95 L28 120 L32 122 L44 100" fill="#ffffff" stroke="#e0dcd6" strokeWidth="0.8" />
+          <path d="M43 96 L29 118 L33 120 L45 102" fill="#ffffff" stroke="#e0dcd6" strokeWidth="0.8" />
         </g>
         <g className="lab-guide-svg__arm lab-guide-svg__arm--right">
           {pose === 'wave' ? (
-            <path d="M78 95 L95 75 L98 78 L80 100" fill="#ffffff" stroke="#e0dcd6" strokeWidth="0.8" />
+            <path d="M77 96 L94 76 L97 79 L79 102" fill="#ffffff" stroke="#e0dcd6" strokeWidth="0.8" />
           ) : pose === 'think' ? (
-            <path d="M78 95 L88 70 L91 72 L82 100" fill="#ffffff" stroke="#e0dcd6" strokeWidth="0.8" />
+            <path d="M77 96 L87 71 L90 73 L81 102" fill="#ffffff" stroke="#e0dcd6" strokeWidth="0.8" />
           ) : (
-            <path d="M78 95 L92 115 L89 117 L76 100" fill="#ffffff" stroke="#e0dcd6" strokeWidth="0.8" />
+            <path d="M77 96 L91 114 L88 116 L75 102" fill="#ffffff" stroke="#e0dcd6" strokeWidth="0.8" />
           )}
         </g>
-        {/* Boots */}
-        <rect x="36" y="172" width="18" height="12" rx="3" fill="#5c3d2e" />
-        <rect x="66" y="172" width="18" height="12" rx="3" fill="#5c3d2e" />
-        {/* Walk legs offset */}
-        {pose === 'walk' && (
+
+        {/* 短靴 */}
+        {pose === 'walk' ? (
           <>
-            <rect x="38" y="168" width="16" height="16" rx="2" fill="#5c3d2e" transform="rotate(-8 46 176)" />
-            <rect x="64" y="170" width="16" height="16" rx="2" fill="#5c3d2e" transform="rotate(8 72 178)" />
+            <rect x="37" y="168" width="17" height="14" rx="3" fill="#5c3d2e" transform="rotate(-6 45 175)" />
+            <rect x="63" y="170" width="17" height="14" rx="3" fill="#5c3d2e" transform="rotate(6 71 177)" />
+          </>
+        ) : (
+          <>
+            <rect x="37" y="172" width="18" height="12" rx="3" fill="#5c3d2e" />
+            <rect x="65" y="172" width="18" height="12" rx="3" fill="#5c3d2e" />
           </>
         )}
       </svg>

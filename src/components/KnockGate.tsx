@@ -79,6 +79,7 @@ export default function KnockGate({ onEnter }: KnockGateProps) {
               type="button"
               className={`knock-gate__bell ${ringing ? 'knock-gate__bell--ring' : ''}`}
               onClick={handleKnock}
+              onMouseDown={(e) => e.preventDefault()}
               disabled={opening}
               aria-label="按门铃"
             >
