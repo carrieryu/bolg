@@ -55,281 +55,434 @@ a:hover { color: var(--accent); }
   background-size: 24px 24px;
 }
 
-/* ── 敲门入场 ── */
+/* ── 敲门入场 · CSS 奶白双开门 ── */
 .knock-gate {
   position: fixed;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 100;
-  background-color: var(--bg-paper);
-  background-image:
-    linear-gradient(var(--bg-paper-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--bg-paper-grid) 1px, transparent 1px);
-  background-size: 24px 24px;
-  overflow: hidden;
+  overflow: visible;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.knock-gate__bg { position: absolute; inset: 0; pointer-events: none; }
-
-.knock-gate__blob {
+.knock-gate__stage {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.3;
-  animation: blob-float 8s ease-in-out infinite;
-}
-.knock-gate__blob--1 {
-  width: 260px; height: 260px;
-  top: 12%; left: 8%;
-  background: var(--peach);
-}
-.knock-gate__blob--2 {
-  width: 200px; height: 200px;
-  bottom: 18%; right: 10%;
-  background: var(--accent);
-  animation-delay: -3s;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 2rem);
+  perspective: 1100px;
+  overflow: visible;
 }
 
-@keyframes blob-float {
-  0%, 100% { transform: translate(0, 0); }
-  50% { transform: translate(12px, -8px); }
-}
-
-.knock-gate__scene {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 1.5rem;
-  max-width: 360px;
-  width: 100%;
-}
-
-.knock-gate__label {
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  color: var(--text-light);
-  margin-bottom: 0.5rem;
-}
-
-.knock-gate__title {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 5vw, 2.6rem);
-  color: var(--text);
-  margin-bottom: 0.5rem;
-  line-height: 1.3;
-}
-
-.knock-gate__hint {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
-  min-height: 1.4em;
-  transition: opacity 0.3s ease;
-}
-
-/* 门 + 门铃一体单元 */
-.knock-gate__door-unit {
-  display: flex;
-  margin: 0 auto;
-  width: min(260px, 88vw);
-  border-radius: 14px;
-  border: 2px solid var(--border-soft);
-  background: linear-gradient(180deg, #ebe3d8 0%, #e3d9cc 100%);
-  box-shadow: 0 8px 28px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.5);
-  overflow: hidden;
-}
-
-.knock-gate__door-room {
-  position: relative;
-  flex: 1;
-  padding: 14px 10px 14px 14px;
-  min-width: 0;
-}
-
-.knock-gate__door-glow {
-  position: absolute;
-  inset: 16px 8px 16px 14px;
-  border-radius: 6px;
-  background: linear-gradient(180deg, #fff9f0 0%, #ffe8d0 100%);
-  opacity: 0;
-  transition: opacity 0.9s ease 0.35s;
-}
-.knock-gate__door-unit--open .knock-gate__door-glow {
-  opacity: 1;
-}
-
-.knock-gate__door-leaf {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: auto;
-  display: block;
-  transform-origin: left center;
-  transition: transform 1s cubic-bezier(0.34, 1.15, 0.64, 1), opacity 0.55s ease;
-}
-.knock-gate__door-unit--open .knock-gate__door-leaf {
-  transform: perspective(500px) rotateY(-62deg) translateX(-4px);
-  opacity: 0.2;
-}
-
-/* 门铃墙 — 与门框同材质 */
-.knock-gate__bell-wall {
-  width: 76px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(180deg, #e8dfd4 0%, #ddd4c8 100%);
-  border-left: 1.5px solid rgba(160, 145, 125, 0.4);
-  box-shadow: inset 2px 0 6px rgba(255,255,255,0.25);
-}
-
-.knock-gate__bell {
-  position: relative;
-  width: 58px;
-  height: auto;
-  padding: 6px 4px 4px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
+.knock-gate__house {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+  gap: clamp(0.75rem, 2.5vh, 1.1rem);
+  width: min(380px, 92vw);
+  overflow: visible;
 }
-.knock-gate__bell:focus {
+
+.knock-gate__door-row {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
+.knock-gate__door-row .knock-gate__doorway {
+  width: 100%;
+}
+
+/* 门牌 */
+.knock-gate__plate {
+  width: 100%;
+  text-align: center;
+  padding: 0.85rem 1.1rem 0.95rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-soft);
+  border-radius: var(--radius);
+  box-shadow:
+    0 10px 28px var(--shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.knock-gate__plate-tag {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-light);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.2rem;
+}
+
+.knock-gate__plate-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 5vw, 1.85rem);
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.25;
+  margin-bottom: 0.35rem;
+}
+
+.knock-gate__plate-hint {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  min-height: 1.25em;
+}
+
+/* 门框 + 双开门 */
+.knock-gate__doorway {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  max-height: min(520px, 58vh);
+  transform-style: preserve-3d;
+}
+
+.knock-gate__frame {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--radius) + 4px);
+  border: 3px solid rgba(232, 223, 212, 0.95);
+  box-shadow:
+    0 0 0 1px var(--border-soft),
+    0 16px 40px var(--shadow),
+    inset 0 0 0 2px rgba(255, 252, 248, 0.8);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.knock-gate__corridor {
+  position: absolute;
+  inset: 8px;
+  border-radius: calc(var(--radius-sm) + 2px);
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, var(--peach) 0%, var(--bg-card) 45%, var(--bg-paper) 100%);
+  background-color: var(--bg-card);
+  background-image:
+    linear-gradient(var(--bg-paper-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-paper-grid) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(253, 217, 199, 0.55) 0%, transparent 55%);
+  background-size: 20px 20px, 20px 20px, 100% 100%;
+  z-index: 0;
+}
+
+.knock-gate__corridor-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 35%, rgba(255, 252, 248, 0.95) 0%, transparent 68%);
+  opacity: 0.35;
+  transition: opacity 1s ease;
+}
+
+.knock-gate__corridor-text {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--accent-deep);
+  opacity: 0;
+  transition: opacity 0.6s ease 0.35s;
+  white-space: nowrap;
+}
+
+.knock-gate__leaf {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  width: calc(50% - 8px);
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 7px,
+      rgba(232, 223, 212, 0.22) 7px,
+      rgba(232, 223, 212, 0.22) 8px
+    ),
+    linear-gradient(165deg, #fffdfb 0%, var(--bg-door) 42%, #f3ebe2 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -8px 16px rgba(232, 223, 212, 0.35),
+    2px 0 12px rgba(120, 100, 80, 0.06);
+}
+
+.knock-gate__leaf--left {
+  left: 8px;
+  border-radius: calc(var(--radius-sm) + 2px) 2px 2px calc(var(--radius-sm) + 2px);
+  transform-origin: left center;
+}
+
+.knock-gate__leaf--right {
+  right: 8px;
+  border-radius: 2px calc(var(--radius-sm) + 2px) calc(var(--radius-sm) + 2px) 2px;
+  transform-origin: right center;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -8px 16px rgba(232, 223, 212, 0.35),
+    -2px 0 12px rgba(120, 100, 80, 0.06);
+}
+
+.knock-gate__leaf:focus {
   outline: none;
 }
-.knock-gate__bell:focus-visible {
-  outline: 2px solid var(--accent-deep);
-  outline-offset: 3px;
-  border-radius: 8px;
-}
-.knock-gate__bell:hover {
-  transform: scale(1.06);
-}
-.knock-gate__bell--ring {
-  animation: bell-ring 0.52s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-}
-.knock-gate__bell:disabled {
-  cursor: default;
-  opacity: 0.55;
+
+.knock-gate__leaf:focus-visible {
+  outline: none;
 }
 
-.knock-gate__bell-art {
-  width: 48px;
-  height: auto;
+.knock-gate__panel {
   display: block;
-  filter: drop-shadow(0 2px 4px rgba(120, 90, 70, 0.15));
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  height: 22%;
+  border-radius: 8px;
+  border: 1.5px solid rgba(200, 185, 170, 0.45);
+  background: linear-gradient(180deg, #fffdfb 0%, var(--bg-card) 100%);
+  box-shadow:
+    inset 0 2px 6px rgba(255, 255, 255, 0.9),
+    inset 0 -3px 8px rgba(232, 223, 212, 0.4);
+  pointer-events: none;
 }
 
-.knock-gate__bell-count {
-  font-size: 0.62rem;
-  color: var(--accent-deep);
-  margin-top: 2px;
-  font-weight: 500;
+.knock-gate__leaf--left .knock-gate__panel:nth-child(1) { top: 10%; }
+.knock-gate__leaf--left .knock-gate__panel:nth-child(2) { top: 39%; }
+.knock-gate__leaf--left .knock-gate__panel:nth-child(3) { top: 68%; }
+
+.knock-gate__leaf--right .knock-gate__panel:nth-child(1) { top: 10%; }
+.knock-gate__leaf--right .knock-gate__panel:nth-child(2) { top: 39%; }
+.knock-gate__leaf--right .knock-gate__panel:nth-child(3) { top: 68%; }
+
+.knock-gate__knob {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 22px;
+  margin-top: -11px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--peach) 0%, #f0c9b0 100%);
+  border: 1.5px solid rgba(232, 180, 155, 0.55);
+  box-shadow: 0 2px 6px var(--shadow);
+  pointer-events: none;
+}
+
+.knock-gate__leaf--left .knock-gate__knob { right: 10%; }
+.knock-gate__leaf--right .knock-gate__knob { left: 10%; }
+
+/* 敲门声波（跟随点击位置） */
+.knock-gate__ripple-wrap {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 5;
 }
 
 .knock-gate__ripple {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
+  display: block;
+  width: 56px;
+  height: 56px;
   border: 2px solid var(--accent);
+  border-radius: 50%;
+  animation: knock-ripple 0.75s ease-out forwards;
+}
+
+.knock-gate__leaf:active {
+  filter: none;
+  opacity: 1;
+}
+
+@keyframes knock-ripple {
+  0% { transform: scale(0.4); opacity: 0.85; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* 双开 + 进入 */
+.knock-gate--opening .knock-gate__leaf--left {
+  transform: rotateY(-68deg);
+}
+
+.knock-gate--opening .knock-gate__leaf--right {
+  transform: rotateY(68deg);
+}
+
+.knock-gate--opening .knock-gate__corridor-glow {
+  opacity: 1;
+}
+
+.knock-gate--opening .knock-gate__corridor-text {
+  opacity: 1;
+}
+
+.knock-gate--opening .knock-gate__plate {
   opacity: 0;
-  pointer-events: none;
-}
-.knock-gate__bell--ring .knock-gate__ripple--1 {
-  animation: ripple-out 0.55s ease-out forwards;
-}
-.knock-gate__bell--ring .knock-gate__ripple--2 {
-  animation: ripple-out 0.55s ease-out 0.12s forwards;
+  transform: translateY(-8px);
 }
 
-@keyframes bell-ring {
-  0% { transform: scale(1) rotate(0); }
-  15% { transform: scale(1.05) rotate(-10deg); }
-  30% { transform: scale(1.05) rotate(8deg); }
-  45% { transform: scale(1.04) rotate(-6deg); }
-  60% { transform: scale(1.03) rotate(5deg); }
-  75% { transform: scale(1.02) rotate(-2deg); }
-  100% { transform: scale(1) rotate(0); }
+.knock-gate--opening .knock-gate__stage {
+  animation: gate-zoom-in 1.15s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-@keyframes ripple-out {
-  0% { transform: scale(1); opacity: 0.5; }
-  100% { transform: scale(1.7); opacity: 0; }
+@keyframes gate-zoom-in {
+  0% { transform: scale(1); }
+  55% { transform: scale(1.06); }
+  100% { transform: scale(1.14); opacity: 0; }
 }
 
-.knock-gate--opening .knock-gate__scene {
-  opacity: 0;
-  transform: translateY(-12px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+.knock-gate--opening .knock-gate__peek {
+  animation: gate-overlay-fade 0.7s ease forwards;
 }
 
-/* 探头向导 — 从门上方探出 */
+@keyframes gate-overlay-fade {
+  to { opacity: 0; transform: translateX(8px); }
+}
+
 .knock-gate__peek {
-  margin-top: 1rem;
-  text-align: center;
-  animation: peek-in 0.5s cubic-bezier(0.34, 1.15, 0.64, 1);
+  position: absolute;
+  left: calc(100% + clamp(0.5rem, 2.5vw, 0.85rem));
+  top: 20%;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  pointer-events: none;
+  animation: peek-in 0.45s cubic-bezier(0.34, 1.12, 0.64, 1);
 }
+
 @keyframes peek-in {
-  from { opacity: 0; transform: translateY(12px) scale(0.94); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateX(-14px) scale(0.94); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
 }
 
 .knock-gate__peek-face {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 0.5rem;
+  width: 48px;
+  height: 48px;
+  margin-left: 0.15rem;
   position: relative;
   background: var(--peach);
   border-radius: 50%;
   border: 2px solid var(--border-soft);
+  box-shadow: 0 6px 16px var(--shadow);
 }
+
 .knock-gate__peek-hair {
   position: absolute;
-  top: -6px; left: -3px; right: -3px;
-  height: 32px;
+  top: -5px;
+  left: -3px;
+  right: -3px;
+  height: 28px;
   background: var(--hair);
-  border-radius: 28px 28px 0 0;
+  border-radius: 24px 24px 0 0;
 }
+
 .knock-gate__peek-eye {
   position: absolute;
-  top: 26px;
-  width: 7px; height: 8px;
+  top: 22px;
+  width: 6px;
+  height: 7px;
   background: var(--hair);
   border-radius: 50%;
 }
-.knock-gate__peek-eye--l { left: 15px; }
-.knock-gate__peek-eye--r { right: 15px; }
+.knock-gate__peek-eye--l { left: 13px; }
+.knock-gate__peek-eye--r { right: 13px; }
+
 .knock-gate__peek-blush {
   position: absolute;
-  top: 34px;
-  width: 11px; height: 5px;
+  top: 29px;
+  width: 10px;
+  height: 4px;
   background: var(--accent);
   border-radius: 50%;
   opacity: 0.55;
 }
-.knock-gate__peek-blush--l { left: 9px; }
-.knock-gate__peek-blush--r { right: 9px; }
+.knock-gate__peek-blush--l { left: 8px; }
+.knock-gate__peek-blush--r { right: 8px; }
+
+.knock-gate__peek-bubble {
+  position: relative;
+  min-width: 11.5rem;
+  max-width: min(280px, calc(100vw - 2rem));
+}
+
+.knock-gate__peek-tail {
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  background: var(--bg-card);
+  border-left: 1.5px solid var(--border-soft);
+  border-bottom: 1.5px solid var(--border-soft);
+  transform: rotate(45deg);
+  z-index: 0;
+}
 
 .knock-gate__peek-msg {
-  font-size: 0.85rem;
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  font-size: 0.86rem;
   color: var(--text);
   background: var(--bg-card);
   border: 1.5px solid var(--border-soft);
-  border-radius: 20px;
-  padding: 0.45rem 1rem;
-  box-shadow: 0 4px 12px var(--shadow);
-  white-space: nowrap;
+  border-radius: 16px;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 6px 18px var(--shadow);
+  line-height: 1.5;
+  white-space: normal;
+}
+
+@media (max-width: 560px) {
+  .knock-gate__peek {
+    left: auto;
+    right: 0;
+    top: auto;
+    bottom: -4.2rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .knock-gate__peek-face {
+    margin-left: 0;
+    flex-shrink: 0;
+  }
+
+  .knock-gate__peek-bubble {
+    min-width: 12rem;
+    max-width: min(300px, calc(100vw - 2.5rem));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .knock-gate__leaf,
+  .knock-gate__stage,
+  .knock-gate__plate {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  .knock-gate--opening .knock-gate__leaf--left { transform: rotateY(-45deg); }
+  .knock-gate--opening .knock-gate__leaf--right { transform: rotateY(45deg); }
+
+  .knock-gate__peek {
+    animation: none;
+  }
 }
 
 /* ── 鼠标拖尾 ── */
@@ -784,8 +937,6 @@ a:hover { color: var(--accent); }
   .about-panel__social { justify-content: center; }
   .lab-guide-svg { width: 105px; }
   .lab-guide-svg__bubble { max-width: 155px; font-size: 0.74rem; }
-  .knock-gate__door-unit { width: min(240px, 92vw); }
-  .knock-gate__bell-wall { width: 68px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
