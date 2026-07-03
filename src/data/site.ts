@@ -70,7 +70,7 @@ export const projects = [
 ] as const
 
 export const guideTips = {
-  gate: '按按门铃吧，我在里面等你哦～',
+  gate: '敲敲门吧，我在里面等你哦～',
   hero: '欢迎光临！我是小向导，有问题随时点我呀。',
   articles: '这些是最近写的文章，值得一读哦。',
   projects: '这边是项目小角落，每个都是一次尝试。',
