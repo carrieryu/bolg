@@ -26,7 +26,7 @@ export function getEffectsConfig(): EffectsConfig {
 
   return {
     mode: 'cool',
-    guideBackend: 'svg',
+    guideBackend: 'live2d',
     showGuide: true,
     showMouseTrail: !reduced,
     particleCount: mobile ? 18 : 48,

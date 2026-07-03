@@ -12,7 +12,9 @@ export default function App() {
   const [activeSection, setActiveSection] = useState<SectionId>('hero')
   const effects = useMemo(() => getEffectsConfig(), [])
 
-  const guideMessage = guideTips[activeSection] ?? guideTips.default
+  const guideMessage = entered
+    ? (guideTips[activeSection] ?? guideTips.default)
+    : guideTips.gate
 
   const handleSectionChange = useCallback((sectionId: string) => {
     if (sectionId in guideTips) {
@@ -22,7 +24,11 @@ export default function App() {
 
   if (!entered) {
     return (
-      <KnockGate onEnter={() => setEntered(true)} />
+      <>
+        <MouseTrail config={effects} elevated />
+        <KnockGate onEnter={() => setEntered(true)} />
+        <GuideAvatar config={effects} message={guideMessage} />
+      </>
     )
   }
 

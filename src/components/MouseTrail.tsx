@@ -3,6 +3,7 @@ import type { EffectsConfig } from '../config/effects'
 
 interface MouseTrailProps {
   config: EffectsConfig
+  elevated?: boolean
 }
 
 interface Particle {
@@ -16,7 +17,7 @@ interface Particle {
   size: number
 }
 
-export default function MouseTrail({ config }: MouseTrailProps) {
+export default function MouseTrail({ config, elevated = false }: MouseTrailProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<Particle[]>([])
   const mouseRef = useRef({ x: 0, y: 0, active: false })
@@ -130,7 +131,7 @@ export default function MouseTrail({ config }: MouseTrailProps) {
   return (
     <canvas
       ref={canvasRef}
-      className="mouse-trail"
+      className={`mouse-trail${elevated ? ' mouse-trail--elevated' : ''}`}
       aria-hidden
     />
   )

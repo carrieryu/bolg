@@ -12,12 +12,6 @@ const PLATE_HINTS = [
   '门要开啦～',
 ]
 
-const PEEK_MSG: Record<number, string> = {
-  1: '嗯？有人在敲门～',
-  2: '再敲一下，我就来开门哦！',
-  3: '来啦来啦，欢迎进来～',
-}
-
 const DEFAULT_RIPPLE = { x: 50, y: 52 }
 
 interface RippleState {
@@ -102,8 +96,6 @@ export default function KnockGate({ onEnter }: KnockGateProps) {
   }, [handleKnock])
 
   const plateHint = PLATE_HINTS[Math.min(knockCount, PLATE_HINTS.length - 1)]
-  const showPeek = knockCount >= 1 && knockCount <= 3 && !opening
-  const peekMsg = PEEK_MSG[knockCount] ?? PEEK_MSG[3]
 
   return (
     <div
@@ -163,22 +155,6 @@ export default function KnockGate({ onEnter }: KnockGateProps) {
                 </span>
               )}
             </div>
-
-            {showPeek && (
-              <div className="knock-gate__peek" key={knockCount} aria-hidden>
-                <div className="knock-gate__peek-face">
-                  <div className="knock-gate__peek-hair" />
-                  <div className="knock-gate__peek-eye knock-gate__peek-eye--l" />
-                  <div className="knock-gate__peek-eye knock-gate__peek-eye--r" />
-                  <div className="knock-gate__peek-blush knock-gate__peek-blush--l" />
-                  <div className="knock-gate__peek-blush knock-gate__peek-blush--r" />
-                </div>
-                <div className="knock-gate__peek-bubble">
-                  <span className="knock-gate__peek-tail" aria-hidden />
-                  <p className="knock-gate__peek-msg">{peekMsg}</p>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
