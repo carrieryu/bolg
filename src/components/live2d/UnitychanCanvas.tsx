@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Application, Ticker } from 'pixi.js'
 import type { Live2DModel } from 'pixi-live2d-display/cubism4'
 import type { GuidePose } from '../../types/guide'
+import { applyGazeToModel } from './focusAtClient'
 import { loadCubismCore } from './loadCubismCore'
 import { POSE_MOTIONS, UNITYCHAN } from './unitychanConfig'
 
@@ -13,13 +14,24 @@ interface UnitychanCanvasProps {
 export default function UnitychanCanvas({ pose, onFail }: UnitychanCanvasProps) {
   const hostRef = useRef<HTMLDivElement>(null)
   const modelRef = useRef<Live2DModel | null>(null)
-  const appRef = useRef<Application | null>(null)
+  const pointerRef = useRef({
+    x: typeof window !== 'undefined' ? window.innerWidth * 0.5 : 0,
+    y: typeof window !== 'undefined' ? window.innerHeight * 0.4 : 0,
+  })
 
   useEffect(() => {
     const host = hostRef.current
     if (!host) return
 
     let disposed = false
+    let applyGaze: (() => void) | null = null
+
+    const trackPointer = (clientX: number, clientY: number) => {
+      pointerRef.current = { x: clientX, y: clientY }
+    }
+
+    const onMouseMove = (e: MouseEvent) => trackPointer(e.clientX, e.clientY)
+    const onPointerMove = (e: PointerEvent) => trackPointer(e.clientX, e.clientY)
 
     void (async () => {
       try {
@@ -38,13 +50,14 @@ export default function UnitychanCanvas({ pose, onFail }: UnitychanCanvasProps) 
           antialias: true,
           resolution: Math.min(window.devicePixelRatio || 1, 2),
           autoDensity: true,
+          sharedTicker: true,
         })
 
         host.appendChild(app.view as HTMLCanvasElement)
-        appRef.current = app
 
         const model = await Live2DModel.from(UNITYCHAN.modelUrl, {
           autoInteract: true,
+          autoUpdate: true,
         })
         if (disposed) return
 
@@ -55,7 +68,20 @@ export default function UnitychanCanvas({ pose, onFail }: UnitychanCanvasProps) 
         app.stage.addChild(model)
         modelRef.current = model
 
+        applyGaze = () => {
+          const current = modelRef.current
+          const hostEl = hostRef.current
+          if (!current || !hostEl) return
+          const { x, y } = pointerRef.current
+          applyGazeToModel(current, x, y, hostEl)
+        }
+
+        model.internalModel.on('beforeModelUpdate', applyGaze)
+
         void model.motion(POSE_MOTIONS.idle)
+
+        window.addEventListener('mousemove', onMouseMove, { passive: true, capture: true })
+        window.addEventListener('pointermove', onPointerMove, { passive: true, capture: true })
       } catch {
         if (!disposed) onFail()
       }
@@ -63,10 +89,11 @@ export default function UnitychanCanvas({ pose, onFail }: UnitychanCanvasProps) 
 
     return () => {
       disposed = true
+      window.removeEventListener('mousemove', onMouseMove, { capture: true })
+      window.removeEventListener('pointermove', onPointerMove, { capture: true })
+      if (applyGaze) modelRef.current?.internalModel.off('beforeModelUpdate', applyGaze)
       modelRef.current?.destroy()
       modelRef.current = null
-      appRef.current?.destroy(true, { children: true })
-      appRef.current = null
       host.replaceChildren()
     }
   }, [onFail])
@@ -77,19 +104,10 @@ export default function UnitychanCanvas({ pose, onFail }: UnitychanCanvasProps) 
     void model.motion(POSE_MOTIONS[pose])
   }, [pose])
 
-  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const model = modelRef.current
-    const host = hostRef.current
-    if (!model || !host) return
-    const rect = host.getBoundingClientRect()
-    model.focus(e.clientX - rect.left, e.clientY - rect.top)
-  }
-
   return (
     <div
       ref={hostRef}
       className="lab-guide-live2d__canvas"
-      onMouseMove={handleMove}
       aria-hidden
     />
   )
